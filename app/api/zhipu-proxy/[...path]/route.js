@@ -1,15 +1,20 @@
+
 export async function POST(request) {
   const url = new URL(request.url);
   const path = url.pathname.replace('/api/zhipu-proxy', '');
   const targetUrl = 'https://open.bigmodel.cn/api/paas/v4' + path;
 
-  const headers = new Headers(request.headers);
-  headers.delete('host');
+  const auth = request.headers.get('authorization') || request.headers.get('Authorization') || '';
+
+  const body = await request.text();
 
   const response = await fetch(targetUrl, {
-    method: request.method,
-    headers: headers,
-    body: request.body,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': auth,
+    },
+    body: body,
   });
 
   const data = await response.text();
@@ -17,7 +22,7 @@ export async function POST(request) {
   return new Response(data, {
     status: response.status,
     headers: {
-      'Content-Type': response.headers.get('Content-Type') || 'application/json',
+      'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*',
     },
   });
