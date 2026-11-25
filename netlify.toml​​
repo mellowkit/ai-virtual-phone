@@ -1,0 +1,5 @@
+[[redirects]]
+  from = "/api/amd-proxy/*"
+  to = "https://developer.amd.com.cn/radeon/api/:splat"
+  status = 200
+  force = true
